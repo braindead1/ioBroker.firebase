@@ -1,0 +1,82 @@
+<script type="text/x-iobroker" data-template-name="firebase">
+    <div class="row">
+        <div class="col s4">
+            <input type="checkbox" data-field="enabled" data-default="false"/>
+            <!-- this field is mandatory, just to find out if to include this settings or not</span-->
+            <span class="translate">enabled</span>
+        </div>
+        <div class="col s8">
+            <input type="checkbox" data-field="changesOnly" data-default="true"/>
+            <span class="translate">log changes only</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s4"></div>
+        <div class="col s8">
+            <input type="number" data-field="debounce" min="500" max="86400000" data-default="10000" />
+            <label class="translate">De-bounce interval(ms)</label>
+        </div>
+    </div>
+</script>
+
+<!-- translations -->
+<script type="text/javascript">
+    systemDictionary = $.extend(systemDictionary, {
+        "De-bounce interval(ms)": {
+            "en": "Ignore changes till value stays unchanged for X Milliseconds<br>(Debounce Time)",
+            "de": "Änderungen ignorieren, bis der Wert für X Millisekunden unverändert bleibt <br> (Entprellzeit)",
+            "ru": "Игнорировать изменения до тех пор, пока значение не останется неизменным в течение X миллисекунд <br> (время отладки)",
+            "pt": "Ignorar alterações até que o valor permaneça inalterado por X Milissegundos <br> (Tempo de Depuração)",
+            "nl": "Wijzigingen negeren totdat waarde ongewijzigd blijft voor X Milliseconds <br> (Debounce Time)",
+            "fr": "Ignorer les modifications jusqu'à ce que la valeur reste inchangée pour X millisecondes <br> (Debounce Time)",
+            "it": "Ignora le modifiche fino a quando il valore rimane invariato per X Milliseconds <br> (Debounce Time)",
+            "es": "Ignorar cambios hasta que el valor permanezca sin cambios durante X milisegundos <br> (Tiempo de rebote)",
+            "pl": "Zignoruj ​​zmiany, aż wartość pozostanie niezmieniona przez X Milliseconds <br> (Czas odbicia)",
+            "zh-cn": "忽略更改，直到值保持不变为X毫秒<br>（去抖时间）"
+        },
+        "enabled": {
+            "en": "enabled",
+            "de": "Aktiviert",
+            "ru": "активно",
+            "pt": "ativado",
+            "nl": "ingeschakeld",
+            "fr": "activée",
+            "it": "abilitato",
+            "es": "habilitado",
+            "pl": "włączony"
+        },
+        "log changes only": {
+            "en": "Record changes only",
+            "de": "Nur Änderungen aufzeichnen",
+            "ru": "Запись только изменений",
+            "pt": "Registrar apenas alterações",
+            "nl": "Wijzigingen alleen registreren",
+            "fr": "Enregistrer les modifications uniquement",
+            "it": "Registra solo le modifiche",
+            "es": "Registrar solo cambios",
+            "pl": "Zapisz tylko zmiany",
+            "zh-cn": "仅记录更改"
+        }
+    });
+    // There are two ways how to predefine default settings:
+    // - with attribute "data-default" (content independent)
+    // - with function in global variable "defaults". Function name is equal with adapter name.
+    //   as input function receives object with all information concerning it
+    if (typeof defaults !== 'undefined') {
+        defaults.firebase = function (obj, instanceObj) {
+            if (obj && obj.common && obj.common.type !== 'number') {
+                return {
+                    enabled: false,
+                    changesOnly: false,
+                    debounce: 0
+                };
+            } else {
+                return {
+                    enabled: false,
+                    changesOnly: true,
+                    debounce: instanceObj.native.debounce
+                };
+            }
+        }
+    }
+</script>

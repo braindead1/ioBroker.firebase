@@ -1,0 +1,103 @@
+{
+    "common": {
+        "name": "firebase",
+        "version": "0.0.1",
+        "news": {
+            "0.0.1": {
+                "en": "initial release",
+                "de": "Erstveröffentlichung",
+                "ru": "Начальная версия",
+                "pt": "lançamento inicial",
+                "nl": "Eerste uitgave",
+                "fr": "Première version",
+                "it": "Versione iniziale",
+                "es": "Versión inicial",
+                "pl": "Pierwsze wydanie",
+                "zh-cn": "首次出版"
+            }
+        },
+        "title": "Firebase History",
+        "titleLang": {
+            "en": "Firebase logging",
+            "de": "Firebase Protokollierung",
+            "ru": "Ведение журнала Firebase",
+            "pt": "Firebase logging",
+            "nl": "Firebase-logboekregistratie",
+            "fr": "Journalisation Firebase",
+            "it": "Registrazione Firebase",
+            "es": "Registro de Firebase",
+            "pl": "Rejestrowanie w Firebase",
+            "zh-cn": "Firebase日志记录"
+        },
+        "desc": {
+            "en": "Logging of states into Google Firebase",
+            "de": "Protokollierung von States in Google Firebase",
+            "ru": "Регистрация состояний в Google Firebase",
+            "pt": "Registro de estados no Google Firebase",
+            "nl": "Loggen van staten in Google Firebase",
+            "fr": "Journalisation des états dans Google Firebase",
+            "it": "Registrazione degli stati in Google Firebase",
+            "es": "Registro de estados en Google Firebase",
+            "pl": "Logowanie stanów do Google Firebase",
+            "zh-cn": "将状态登录到Google Firebase"
+        },
+        "authors": [
+            "braindead1 <os.braindead1@gmail.com>"
+        ],
+        "keywords": [
+            "history",
+            "logging",
+            "firebase"
+        ],
+        "license": "MIT",
+        "platform": "Javascript/Node.js",
+        "main": "main.js",
+        "icon": "firebase.png",
+        "enabled": true,
+        "extIcon": "https://raw.githubusercontent.com/braindead1/ioBroker.firebase/master/admin/firebase.png",
+        "readme": "https://github.com/braindead1/ioBroker.firebase/blob/master/README.md",
+        "loglevel": "info",
+        "messagebox": true,
+        "subscribe": "messagebox",
+        "mode": "daemon",
+        "type": "storage",
+        "compact": true,
+        "connectionType": "cloud",
+        "dataSource": "push",
+        "supportCustoms": true,
+        "materialize": true,
+        "dependencies": [
+            {
+                "js-controller": ">=1.4.2"
+            }
+        ]
+    },
+    "native": {
+        "firebaseConfig": "",
+        "serviceAccount": ""
+    },
+    "objects": [],
+    "instanceObjects": [
+        {
+            "_id": "info",
+            "type": "channel",
+            "common": {
+                "name": "Information"
+            },
+            "native": {}
+        },
+        {
+            "_id": "info.connection",
+            "type": "state",
+            "common": {
+                "role": "indicator.connected",
+                "name": "Connection to Firebase established",
+                "type": "boolean",
+                "read": true,
+                "write": false,
+                "def": false
+            },
+            "native": {}
+        }
+    ]
+}
