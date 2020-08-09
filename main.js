@@ -24,6 +24,8 @@ class Firebase extends utils.Adapter {
         this.on('objectChange', this.onObjectChange.bind(this));
         this.on('message', this.onMessage.bind(this));
         this.on('unload', this.onUnload.bind(this));
+
+        this.firebaseDps = {};
     }
 
     /**
@@ -67,10 +69,10 @@ class Firebase extends utils.Adapter {
                 typeof obj.common.custom[this.namespace] === 'object' &&
                 obj.common.custom[this.namespace].enabled)) {
             // The object was changed
-            this.log.info(`object ${id} changed: ${JSON.stringify(obj)}`);
+            this.initDp(id, obj);
         } else {
             // The object was deleted
-            //this.log.info(`object ${id} deleted`);
+            delete this.firebaseDps[id];
         }
     }
 
@@ -106,6 +108,30 @@ class Firebase extends utils.Adapter {
                 if (obj.callback) this.sendTo(obj.from, obj.command, 'Message received', obj.callback);
             }*/
         }
+    }
+
+    /**
+     * Is called if a subscribed state changes
+     * @param {string} id
+     * @param {ioBroker.Object} obj
+     */
+    initDp(id, obj) {
+        // @ts-ignore
+        const custom = obj.common.custom[this.namespace];
+
+        // changesOnly
+        custom.changesOnly = custom.changesOnly === 'true' || custom.changesOnly === true;
+
+        // debounce
+        if (custom.debounce || custom.debounce === 0) {
+            custom.debounce = parseInt(custom.debounce, 10) || 0;
+        } else {
+            custom.debounce = this.config.debounce;
+        }
+
+        this.firebaseDps[id] = custom;
+
+        this.log.info(`enabled logging for ${id}`);
     }
 
 }

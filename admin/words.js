@@ -37,5 +37,17 @@ systemDictionary = {
         'es': 'Cuenta de servicio',
         'pl': 'Konto usługi',
         'zh-cn': '服务帐号'
+    },
+    'De-bounce interval (ms)': {
+        'en': 'Ignore changes till value stays unchanged for X Milliseconds<br>(Debounce Time)',
+        'de': 'Änderungen ignorieren, bis der Wert für X Millisekunden unverändert bleibt <br> (Entprellzeit)',
+        'ru': 'Игнорировать изменения до тех пор, пока значение не останется неизменным в течение X миллисекунд <br> (время отладки)',
+        'pt': 'Ignorar alterações até que o valor permaneça inalterado por X Milissegundos <br> (Tempo de Depuração)',
+        'nl': 'Wijzigingen negeren totdat waarde ongewijzigd blijft voor X Milliseconds <br> (Debounce Time)',
+        'fr': "Ignorer les modifications jusqu'à ce que la valeur reste inchangée pour X millisecondes <br> (Debounce Time)",
+        'it': 'Ignora le modifiche fino a quando il valore rimane invariato per X Milliseconds <br> (Debounce Time)',
+        'es': 'Ignorar cambios hasta que el valor permanezca sin cambios durante X milisegundos <br> (Tiempo de rebote)',
+        'pl': 'Zignoruj ​​zmiany, aż wartość pozostanie niezmieniona przez X Milliseconds <br> (Czas odbicia)',
+        'zh-cn': '忽略更改，直到值保持不变为X毫秒<br>（去抖时间）'
     }
 };

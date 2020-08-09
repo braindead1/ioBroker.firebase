@@ -74,7 +74,8 @@
     },
     "native": {
         "firebaseConfig": "",
-        "serviceAccount": ""
+        "serviceAccount": "",
+        "debounce": 1000
     },
     "objects": [],
     "instanceObjects": [

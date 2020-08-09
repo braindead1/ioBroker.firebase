@@ -13,8 +13,8 @@
     <div class="row">
         <div class="col s4"></div>
         <div class="col s8">
-            <input type="number" data-field="debounce" min="500" max="86400000" data-default="10000" />
-            <label class="translate">De-bounce interval(ms)</label>
+            <input type="number" data-field="debounce" min="500" max="86400000" data-default="0" />
+            <label class="translate">De-bounce interval (ms)</label>
         </div>
     </div>
 </script>
@@ -22,7 +22,7 @@
 <!-- translations -->
 <script type="text/javascript">
     systemDictionary = $.extend(systemDictionary, {
-        "De-bounce interval(ms)": {
+        "De-bounce interval (ms)": {
             "en": "Ignore changes till value stays unchanged for X Milliseconds<br>(Debounce Time)",
             "de": "Änderungen ignorieren, bis der Wert für X Millisekunden unverändert bleibt <br> (Entprellzeit)",
             "ru": "Игнорировать изменения до тех пор, пока значение не останется неизменным в течение X миллисекунд <br> (время отладки)",
