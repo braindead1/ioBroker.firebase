@@ -75,6 +75,7 @@
     "native": {
         "firebaseConfig": "",
         "serviceAccount": "",
+        "historyCollection": "history",
         "debounce": 1000
     },
     "objects": [],

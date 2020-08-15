@@ -8,6 +8,8 @@
 // you need to create an adapter
 const utils = require('@iobroker/adapter-core');
 
+const admin = require('firebase-admin');
+
 class Firebase extends utils.Adapter {
 
     /**
@@ -22,9 +24,13 @@ class Firebase extends utils.Adapter {
         this.on('ready', this.onReady.bind(this));
         this.on('stateChange', this.onStateChange.bind(this));
         this.on('objectChange', this.onObjectChange.bind(this));
-        this.on('message', this.onMessage.bind(this));
         this.on('unload', this.onUnload.bind(this));
 
+        this.firebaseConfig = {};
+        this.serviceAccount = {};
+        this.db;
+
+        this.historyCollection = '';
         this.firebaseDps = {};
     }
 
@@ -35,9 +41,35 @@ class Firebase extends utils.Adapter {
         // Reset the connection indicator during startup
         this.setState('info.connection', false, true);
 
-        // Subscribe to changes
+        await this.initializeConfiguration();
+
+        // Get history states
+        await this.getObjectViewAsync('custom', 'state', {})
+            .then((doc) => {
+                if (doc && doc.rows) {
+                    for (let i = 0, l = doc.rows.length; i < l; i++) {
+                        if (doc.rows[i].value &&
+                            doc.rows[i].value[this.namespace] &&
+                            typeof doc.rows[i].value[this.namespace] === 'object' &&
+                            doc.rows[i].value[this.namespace].enabled) {
+                            const id = doc.rows[i].id;
+                            const custom = doc.rows[i].value[this.namespace];
+
+                            this.initDp(id, custom);
+                            this.subscribeForeignStates(id);
+                        }
+                    }
+                }
+            });
+
+        // Subscribe to object changes
         this.subscribeForeignObjects('*');
-        this.subscribeStates('*');
+
+        // Connect to Firebase
+        admin.initializeApp({
+            credential: admin.credential.cert(JSON.parse(JSON.stringify(this.serviceAccount)))
+        });
+        this.db = admin.firestore();
 
         // Set connection indicator to conneced
         this.setState('info.connection', true, true);
@@ -50,6 +82,10 @@ class Firebase extends utils.Adapter {
     onUnload(callback) {
         try {
             // Cleanup adapter
+            this.db.terminate();
+
+            this.unsubscribeForeignObjects('*');
+            this.unsubscribeForeignStates('*');
 
             callback();
         } catch (e) {
@@ -69,10 +105,12 @@ class Firebase extends utils.Adapter {
                 typeof obj.common.custom[this.namespace] === 'object' &&
                 obj.common.custom[this.namespace].enabled)) {
             // The object was changed
-            this.initDp(id, obj);
+            this.initDp(id, obj.common.custom[this.namespace]);
+            this.subscribeForeignStates(id);
         } else {
             // The object was deleted
             delete this.firebaseDps[id];
+            this.unsubscribeForeignStates(id);
         }
     }
 
@@ -82,43 +120,67 @@ class Firebase extends utils.Adapter {
      * @param {ioBroker.State | null | undefined} state
      */
     onStateChange(id, state) {
-        if (state) {
+        if (this.firebaseDps[id] !== undefined && state) {
             // The state was changed
-            this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
-        } else {
-            // The state was deleted
-            this.log.info(`state ${id} deleted`);
+            this.pushValueToFirebase(id, state);
         }
     }
 
     /**
-     * Some message was sent to this instance over message box. Used by email, pushover, text2speech, ...
-     * Using this method requires "common.message" property to be set to true in io-package.json
-     * @param {ioBroker.Message} obj
+     * Is called to read the adapter configuration
      */
-    onMessage(obj) {
-        if (typeof obj === 'object' && obj.message) {
-            this.log.debug(JSON.stringify(obj));
-
-            /*if (obj.command === 'send') {
-                // e.g. send email or pushover or whatever
-                this.log.info('send command');
-
-                // Send response in callback if required
-                if (obj.callback) this.sendTo(obj.from, obj.command, 'Message received', obj.callback);
-            }*/
+    async initializeConfiguration() {
+        try {
+            this.firebaseConfig = JSON.parse(this.config.firebaseConfig);
+            this.serviceAccount = JSON.parse(this.config.serviceAccount);
+            this.historyCollection = this.config.historyCollection || 'history';
+        } catch (e) {
+            this.log.error(e);
         }
+    }
+
+    /**
+     * Is called to update ioBroker objects and states
+     * @param {string} collection
+     * @param {Object} doc
+     */
+    async updateObject(collection, doc) {
+        try {
+            this.log.debug(JSON.stringify(collection));
+            this.log.debug(JSON.stringify(doc));
+        } catch (e) {
+            this.log.error(e);
+        }
+    }
+
+    /**
+     * Is used to push state changes to Firebase
+     * @param {string} id 
+     * @param {ioBroker.State} state 
+     */
+    pushValueToFirebase(id, state) {
+        if (typeof state.val === 'object') {
+            state.val = JSON.stringify(state.val);
+        }
+
+        const data = {
+            id: id,
+            value: state.val,
+            time: new Date(state.ts),
+            from: state.from || '',
+            q: state.q || 0,
+            ack: !!state.ack
+        };
+
+        this.db.collection(this.historyCollection).add(data);
     }
 
     /**
      * Is called if a subscribed state changes
      * @param {string} id
-     * @param {ioBroker.Object} obj
+     * @param {Object} custom
      */
-    initDp(id, obj) {
-        // @ts-ignore
-        const custom = obj.common.custom[this.namespace];
-
+    initDp(id, custom) {
         // changesOnly
         custom.changesOnly = custom.changesOnly === 'true' || custom.changesOnly === true;
 

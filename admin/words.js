@@ -38,6 +38,18 @@ systemDictionary = {
         'pl': 'Konto usługi',
         'zh-cn': '服务帐号'
     },
+    'History Collection': {
+        'en': 'History Collection',
+        'de': 'Log Sammlung',
+        'ru': 'Сборник истории',
+        'pt': 'Coleção de História',
+        'nl': 'Geschiedeniscollectie',
+        'fr': "Collection d'histoire",
+        'it': 'Collezione di storia',
+        'es': 'Colección Historia',
+        'pl': 'Zbiór historii',
+        'zh-cn': '历史收藏'
+    },
     'De-bounce interval (ms)': {
         'en': 'Ignore changes till value stays unchanged for X Milliseconds<br>(Debounce Time)',
         'de': 'Änderungen ignorieren, bis der Wert für X Millisekunden unverändert bleibt <br> (Entprellzeit)',
