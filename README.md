@@ -15,9 +15,10 @@ This adapter connects ioBroker to Google Firebase.
 ## Requirements
 A working Firebase project is required to use this adapter.
 
-1. Create a new project on https://firebase.google.com
-2. Create a Cloud Firestore database
-3. Create a service account
+1. Create a new project on https://firebase.google.com.
+2. Create a Web App. The created JSON has to be copied into the adapter configuration. It is important to put the keys of the JSON into quotation marks.
+3. Create a Cloud Firestore database.
+4. Create a service account. The downloaded JSON has to be copied into the adapter configuration.
 
 ## Changelog
 
