@@ -28,7 +28,7 @@ A working Firebase project is required to use this adapter.
 ## License
 MIT License
 
-Copyright (c) 2020 braindead1 <os.braindead1@gmail.com>
+Copyright (c) 2022 braindead1 <os.braindead1@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
